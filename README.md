@@ -3,27 +3,33 @@
 #### Frontend
 ```chainlit run src/chainlit_app.py -w --port 8000```
 
-
 #### Backend
 ```uvicorn src.app.main:app --reload --port 8001```
 ``` ```
 
 #### TODO:
 * fix hardcoded path in src/rag/ingest.py
+    * switch to datastore (PostgreSQL, pgvector, ts_rank)
+* implement intelligent chunking - spaCy
+* compare and contrast embedding models: OpenAI vs tiktoken
+* refactor search reranking
+* implement retries for calling LLM (tenacity)
+    * perhaps host locally if possible
+* implement more intelligent prompting pipeline
+    * engineer prompts
 
-* Inference pipeline
-    * Retrieval
-        * Top-k -> other algorithms
-        * Prompting
-    * Summarization
-* Data Ingestion
-    * Chunking, embedding
-    * Store in database (s3, mongodb)
+
 * Implement MS bot (reach)
     * https://docs.chainlit.io/deploy/teams
 
 
-#### Functionality:
-* frontend ui
-* backend api routing
-* llm query
+
+#### Tech Stack:
+* Frontend: Chainlit
+* Backend: FastAPI
+* PDF Parsing: PyMuPDF 
+* Chunking: custom
+* Embedding: OpenAI
+* Datastore: local
+* Reranking: FAISS
+* LLM: OpenAI
