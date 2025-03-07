@@ -18,6 +18,10 @@
 * implement more intelligent prompting pipeline
     * engineer prompts
 
+* research ways to preprocess data efficiently
+* research chunking methods
+* research search reranking
+* research data storage
 
 * Implement MS bot (reach)
     * https://docs.chainlit.io/deploy/teams
