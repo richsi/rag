@@ -1,4 +1,7 @@
+.env
 .venv/
 
 .chainlit/
 __pycache__/
+
+src/config.py

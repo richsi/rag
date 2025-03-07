@@ -1,6 +1,6 @@
 # src/app/main.py
 from fastapi import FastAPI
-from src.app.api.ask import router
+from src.app.api.query import router
 
 app = FastAPI()
 

@@ -2,19 +2,19 @@
 import chainlit as cl
 import requests
 
-FASTAPI_URL = "http://localhost:8001/api/ask"
+FASTAPI_URL = "http://localhost:8001/api/query"
 
 @cl.on_message
-async def main(message: cl.Message):
+async def main(msg: cl.Message):
 
-  payload = {"query": message.content}
+  payload = {"query": msg.content}
 
   response = requests.post(FASTAPI_URL, json=payload, timeout=5)
 
   if response.ok:
     data = response.json()
     await cl.Message(
-      content=f"Received: {data["answer"]}",
+      content=f"Received: {data["response"]}",
     ).send()
   else:
     print(response.status_code)
