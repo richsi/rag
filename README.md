@@ -9,6 +9,8 @@
 ``` ```
 
 #### TODO:
+* fix hardcoded path in src/rag/ingest.py
+
 * Inference pipeline
     * Retrieval
         * Top-k -> other algorithms
@@ -19,3 +21,9 @@
     * Store in database (s3, mongodb)
 * Implement MS bot (reach)
     * https://docs.chainlit.io/deploy/teams
+
+
+#### Functionality:
+* frontend ui
+* backend api routing
+* llm query

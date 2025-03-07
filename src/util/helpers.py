@@ -12,7 +12,8 @@ def inference(user_query: str):
   completion = client.chat.completions.create(
     model="gpt-4o-mini",
     messages=[
-      {"role": "system", "content": "You are a helpful assistant. If your response includes LateX equations, you must enclose the formulas in double '$' signs. Be concise."},
+      {"role": "system", "content": "You are a helpful assistant. Be clear and concise in your responses."},
+      # {"role": "system", "content": "You are a helpful assistant. If your response includes LateX equations, you must enclose the formulas in double '$' signs. Be concise."},
       {
         "role": "user",
         "content": f"{user_query}"

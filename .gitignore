@@ -2,6 +2,7 @@
 .venv/
 
 .chainlit/
+.files/
 __pycache__/
 
-src/config.py
+data/
