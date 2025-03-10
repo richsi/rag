@@ -14,7 +14,7 @@ async def main(msg: cl.Message):
   if response.ok:
     data = response.json()
     await cl.Message(
-      content=f"Received: {data["response"]}",
+      content=f"{data["response"]}",
     ).send()
   else:
     print(response.status_code)

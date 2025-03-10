@@ -5,8 +5,13 @@ import numpy as np
 import faiss
 import pymupdf
 import json
+import spacy
+import tiktoken
 from openai import OpenAI
 from src.config import OPENAI_API_KEY
+
+nlp = spacy.load("en_core_web_sm")
+encoding = tiktoken.encoding_for_model("gpt-4o-mini")
 
 def read_pdf_document(file_path: str) -> list:
   """
@@ -20,12 +25,60 @@ def read_pdf_document(file_path: str) -> list:
   return page_texts
 
 
-def chunk_text(text: str, max_length: int = 500) -> list:
+def fixed_chunk_text(text: str, max_length: int = 500) -> list:
   """
   Splits text into chunks of a maximum number of characterse.
-  TODO: Improve splitting on sentence boundaries
+  TODO: Improve splitting on sentence boundaries (perhaps overlapping)
   """
   return [text[i:i+max_length] for i in range(0, len(text), max_length)]
+
+
+def chunk_text(text: str, max_tokens: int = 500, overlap: int = 50) -> list:
+  """
+  Splits text into chunks based on sentences so that each chunk has at most max_tokens.
+  Uses spaCy for sentence segmentation and tiktoken to count tokens.
+  
+  Args:
+    text (str): Maximum tokens per chunk
+    max_tokens (int): Maximum tokens per chunk
+    overlap (int): Number of tokens to overlap between consecutive chunks
+
+  Returns:
+    list[str]: A list of text chunks
+  """
+
+  doc = nlp(text)
+  sentences = [sent.text.strip() for sent in doc.sents if sent.text.strip()]
+
+  chunks = []
+  current_chunk = ""
+
+  for sentence in sentences:
+    # build a candidate chunk by appending the sentence
+    candidate = current_chunk + " " + sentence if current_chunk else sentence
+    token_count = len(encoding.encode(candidate))
+    if token_count <= max_tokens:
+      current_chunk = candidate
+    else:
+      if current_chunk:
+        chunks.append(current_chunk.strip())
+        # create overlap from the end of the current_chunk
+        current_tokens = encoding.encode(current_chunk)
+        if overlap > 0 and len(current_tokens) > overlap:
+          overlapped_text = encoding.decode(current_tokens[-overlap:])
+        else:
+          overlapped_text = ""
+        # Start new chunk with overlapped text plus the current sentence
+        current_chunk = overlapped_text + " " + sentence
+      else:
+        # If a single sentence exceeds max_tokens, add it as its own chunk
+        chunks.append(candidate.strip())
+        current_chunk = ""
+  
+  if current_chunk:
+    chunks.append(current_chunk.strip())
+  return chunks
+
 
 
 def embed_text(text: str) -> list:
@@ -62,7 +115,7 @@ def build_index_from_docs(directory: str) -> tuple[faiss.IndexFlatL2, list, list
       file_path = os.path.join(directory, file_name)
       pages = read_pdf_document(file_path) # get a list of text for each page 
       for page_idx, page_text in enumerate(pages): # chunk the pages by idx
-        chunks = chunk_text(page_text, max_length=500) 
+        chunks = chunk_text(page_text, max_tokens=500, overlap=50) 
         for chunk_idx, chunk in enumerate(chunks): # embed the chunks by idx
           embedding = embed_text(chunk)
           all_embeddings.append(embedding)
@@ -84,7 +137,7 @@ def build_index_from_docs(directory: str) -> tuple[faiss.IndexFlatL2, list, list
 
 if __name__ == "__main__":
   local_path = "/home/rhsieh/rag/data" # TODO: fix hardcode
-  documents_dir = f"{local_path}/docs"
+  documents_dir = os.path.join(local_path, "docs")
 
   # process PDFs and build index
   index, chunks, metadata = build_index_from_docs(documents_dir)

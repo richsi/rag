@@ -10,8 +10,7 @@
 #### TODO:
 * fix hardcoded path in src/rag/ingest.py
     * switch to datastore (PostgreSQL, pgvector, ts_rank)
-* implement intelligent chunking - spaCy
-* compare and contrast embedding models: OpenAI vs tiktoken
+* ~~implement intelligent chunking - spaCy~~
 * refactor search reranking
 * implement retries for calling LLM (tenacity)
     * perhaps host locally if possible
@@ -22,6 +21,10 @@
 * research chunking methods
 * research search reranking
 * research permanent data storage with incremental file adding
+
+* add memory
+* add agent functionality
+* add reasoning.. (deepseek)
 
 * Implement MS bot (reach)
     * https://docs.chainlit.io/deploy/teams
