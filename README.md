@@ -5,7 +5,14 @@
 
 #### Backend
 ```uvicorn src.app.main:app --reload --port 8001```
-``` ```
+
+#### Usage
+1. `pip install -r requirements.txt`
+2. Put your pdf documents into `docs/`
+3. Set API key secrets in `.env`
+4. Generate binary file using: `python3 -m src.rag.ingest`. Stored in `indices/`
+5. Start frontend and backend
+6.
 
 #### TODO:
 * fix hardcoded path in src/rag/ingest.py

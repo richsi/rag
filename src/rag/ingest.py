@@ -136,19 +136,20 @@ def build_index_from_docs(directory: str) -> tuple[faiss.IndexFlatL2, list, list
 
 
 if __name__ == "__main__":
-  local_path = "/home/rhsieh/rag/data" # TODO: fix hardcode
+  # local_path = "/home/rhsieh/rag/data" # TODO: fix hardcode
+  local_path = os.getcwd()
   documents_dir = os.path.join(local_path, "docs")
 
   # process PDFs and build index
   index, chunks, metadata = build_index_from_docs(documents_dir)
 
   # save FAISS index to disk
-  index_path = f"{local_path}/indices"
+  index_path = f"{local_path}/data/indices"
   os.makedirs(index_path, exist_ok=True)
   faiss.write_index(index, f"{index_path}/faiss_index.bin")
 
   # save the mapping of chunks and meta data to a JSON file
-  chunk_metadata_mapping_path = f"{local_path}/mapping"
+  chunk_metadata_mapping_path = f"{local_path}/data/mapping"
   os.makedirs(chunk_metadata_mapping_path, exist_ok=True)
   mapping = {"chunks": chunks, "metadata": metadata}
   with open(f"{chunk_metadata_mapping_path}/chunks_mapping.json", "w", encoding="utf-8") as f:

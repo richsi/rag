@@ -1,4 +1,5 @@
 # src/app/api/query.py
+import os
 from fastapi import APIRouter
 from pydantic import BaseModel
 from src.util import helpers
@@ -11,8 +12,8 @@ from src.config import OPENAI_API_KEY
 router = APIRouter()
 
 # Load FAISS index and chunks mapping once at startup
-INDEX_PATH = "/home/rhsieh/rag/data/indices/faiss_index.bin"
-CHUNKS_MAPPING_PATH = "/home/rhsieh/rag/data/mapping/chunks_mapping.json"
+INDEX_PATH = os.getcwd() + "/data/indices/faiss_index.bin"
+CHUNKS_MAPPING_PATH = os.getcwd() + "/data/mapping/chunks_mapping.json"
 
 INDEX= faiss.read_index(INDEX_PATH)
 
